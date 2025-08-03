@@ -1,4 +1,4 @@
-package com.workaround.spectv;
+package com.workaround.spectv.sp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -68,8 +68,8 @@ public class MainActivity extends FragmentActivity  {
                      }
                      document.querySelector('[aria-label*="Continue and accept"]')?.click();
                      document.querySelector('.btn-success')?.click();
-                     // Hide video controls, but keep other UI elements
-                     $('#video-controls').attr('style', 'display: none');
+                     // Hide certain elements
+                     $('<style>li:has(#guide-link), .slider, volume-control, toggle-fullscreen { display:none !important; }</style>').appendTo(document.body);
                      // Style mini channel guide
                      $('#channel-browser').attr('style', 'height: 100%');
                      $('.mini-guide').attr('style', 'height: 100%');
@@ -182,7 +182,7 @@ public class MainActivity extends FragmentActivity  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPref = this.getSharedPreferences("com.workaround.spectv.pref", Context.MODE_PRIVATE);
+        sharedPref = this.getSharedPreferences("com.workaround.spectv.sp.pref", Context.MODE_PRIVATE);
         sharedPrefEdit = sharedPref.edit();
         MyDebug("start onCreate ");
         specPlayerReady = false;
@@ -332,59 +332,30 @@ public class MainActivity extends FragmentActivity  {
         return info;
     }
 
-    private boolean _headerShown;
-
     @SuppressLint("RestrictedApi")
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         // Handle key events to consistently bring up the mini channel guide
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_REWIND || event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD) {
+                spectrumPlayer.dispatchKeyEvent(new KeyEvent(event.getAction(), KeyEvent.KEYCODE_J));
+                return true;
+            }
             if (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
-                spectrumPlayer.dispatchKeyEvent(new KeyEvent(event.getAction(),KeyEvent.KEYCODE_K));
+                spectrumPlayer.dispatchKeyEvent(new KeyEvent(event.getAction(), KeyEvent.KEYCODE_K));
+                return true;
+            }
+            if (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_FAST_FORWARD || event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD) {
+                spectrumPlayer.dispatchKeyEvent(new KeyEvent(event.getAction(), KeyEvent.KEYCODE_L));
                 return true;
             }
 
-            if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && !_headerShown) {
-                spectrumPlayer.evaluateJavascript("$('site-header > :only-child').css('top', '0');", null);
-                _headerShown = true;
-                return true;
-            }
             if (event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
-                if (_headerShown) {
-                    spectrumPlayer.evaluateJavascript("$('site-header > :only-child').css('top', '');", null);
-                } else {
-                    spectrumPlayer.evaluateJavascript("$('site-header > :only-child').css('top', '0');", null);
-                }
-                _headerShown = !_headerShown;
-                return true;
-            }
-
-            Toast.makeText(getBaseContext(), "Key code " + event.getKeyCode(), Toast.LENGTH_LONG).show();
-            if (2 > 1) return super.dispatchKeyEvent(event);
-
-            if ( loginRequired ) {
-                return super.dispatchKeyEvent(event);
-            }
-            if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP && spectrumGuide.getVisibility() == View.GONE && !miniGuideIsShowing) {
-                // Simulate clicking on the video player which brings up the mini channel guide (just like on desktop)
-                //spectrumPlayer.evaluateJavascript("$('#spectrum-player').focus().click();", null);
-
-//                spectrumGuide.evaluateJavascript("window.location.href;", new ValueCallback<String>() {
-//                    @Override
-//                    public void onReceiveValue(String currentURL) {
-//                        currentURL = currentURL.replaceAll("^\"|\"$", "");
-//                        if (!currentURL.equals(guideUrl)) {
-//                            spectrumGuide.evaluateJavascript("history.go(-(history.length -1))", null);
-//                        }
-//                        spectrumPlayer.evaluateJavascript("toggleGuide('SHOW');", null);
-//                    }
-//                });
-
                 if (!guideManager.guideCacheIsReady()) {
                     MyDebug("Error  dispatchKeyEvent - Guide NOT AVAILABLE");
                     Toast.makeText(getBaseContext(), "Guide NOT AVAILABLE",
                             Toast.LENGTH_LONG).show();
-                    return false;
+                    return true;
                 }
 
                 spectrumPlayer.evaluateJavascript("toggleGuide('SHOWGUIDE');", null);
@@ -393,13 +364,6 @@ public class MainActivity extends FragmentActivity  {
                 scrollToGuideChannel(curchannel);
                 return true;
             }
-
-            if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN && spectrumGuide.getVisibility() == View.GONE && !miniGuideIsShowing) {
-                // toggle closed caption
-                spectrumPlayer.evaluateJavascript("$('.closed-caption').click();", null);
-                return true;
-            }
-
 
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && spectrumGuide.getVisibility() != View.GONE) {
                 if (spectrumGuide.canGoBack()) {
@@ -417,7 +381,7 @@ public class MainActivity extends FragmentActivity  {
                 return true;
             }
 
-            if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && spectrumGuide.getVisibility() == View.GONE) {
+            if (false && spectrumGuide.getVisibility() == View.GONE) {
                 // ignore keyevent until app is ready, ie. miniguide data is loaded
                 if (!guideManager.guideCacheIsReady()) {
                     MyDebug("Error  dispatchKeyEvent - MiniGuide NOT AVAILABLE");
@@ -485,7 +449,7 @@ public class MainActivity extends FragmentActivity  {
 
             if ((event.getKeyCode() == KeyEvent.KEYCODE_LAST_CHANNEL ||
                     event.getKeyCode() == KeyEvent.KEYCODE_DEL ||
-                    event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT  ) &&
+                    event.getKeyCode() == KeyEvent.KEYCODE_BACK) &&
                     spectrumPlayer.getVisibility() == View.VISIBLE &&
                     !miniGuideIsShowing) {
                 String newchannel = sharedPref.getString("prevChannel",DEFAULTCHANNEL);

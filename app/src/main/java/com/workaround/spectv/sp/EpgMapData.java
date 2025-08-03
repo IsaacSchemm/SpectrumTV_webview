@@ -1,4 +1,4 @@
-package com.workaround.spectv;
+package com.workaround.spectv.sp;
 
 import java.io.Serializable;
 

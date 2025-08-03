@@ -1,4 +1,4 @@
-package com.workaround.spectv;
+package com.workaround.spectv.sp;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -34,7 +34,7 @@ public class GuideManager {
 
     public GuideManager(Context mycontext){
         context = mycontext.getApplicationContext();
-        sharedPref = context.getSharedPreferences("com.workaround.spectv.pref", MODE_PRIVATE);
+        sharedPref = context.getSharedPreferences("com.workaround.spectv.sp.pref", MODE_PRIVATE);
         sharedPrefEdit = sharedPref.edit();
     }
 
