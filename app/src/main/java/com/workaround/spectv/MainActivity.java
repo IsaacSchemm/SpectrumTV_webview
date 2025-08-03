@@ -68,12 +68,8 @@ public class MainActivity extends FragmentActivity  {
                      }
                      document.querySelector('[aria-label*="Continue and accept"]')?.click();
                      document.querySelector('.btn-success')?.click();
-                     // Hide html elements except video player
-                     $('.site-header').attr('style', 'display: none');
+                     // Hide video controls, but keep other UI elements
                      $('#video-controls').attr('style', 'display: none');
-                     $('.nav-triangle-pattern').attr('style', 'display: none');
-                     $('channels-filter').attr('style', 'display: none');
-                     $('.transparent-header').attr('style', 'display: none');
                      // Style mini channel guide
                      $('#channel-browser').attr('style', 'height: 100%');
                      $('.mini-guide').attr('style', 'height: 100%');
