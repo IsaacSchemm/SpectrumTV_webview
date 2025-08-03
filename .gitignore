@@ -32,4 +32,7 @@ google-services.json
 # Android Profiling
 *.hprof
 
+# Visual Studio data and cache
+.vs/
+
 output-metadata.json
