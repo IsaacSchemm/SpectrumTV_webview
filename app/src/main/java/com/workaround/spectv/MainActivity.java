@@ -332,12 +332,36 @@ public class MainActivity extends FragmentActivity  {
         return info;
     }
 
+    private boolean _headerShown;
+
     @SuppressLint("RestrictedApi")
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-
         // Handle key events to consistently bring up the mini channel guide
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
+                spectrumPlayer.dispatchKeyEvent(new KeyEvent(event.getAction(),KeyEvent.KEYCODE_K));
+                return true;
+            }
+
+            if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && !_headerShown) {
+                spectrumPlayer.evaluateJavascript("$('site-header > :only-child').css('top', '0');", null);
+                _headerShown = true;
+                return true;
+            }
+            if (event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
+                if (_headerShown) {
+                    spectrumPlayer.evaluateJavascript("$('site-header > :only-child').css('top', '');", null);
+                } else {
+                    spectrumPlayer.evaluateJavascript("$('site-header > :only-child').css('top', '0');", null);
+                }
+                _headerShown = !_headerShown;
+                return true;
+            }
+
+            Toast.makeText(getBaseContext(), "Key code " + event.getKeyCode(), Toast.LENGTH_LONG).show();
+            if (2 > 1) return super.dispatchKeyEvent(event);
+
             if ( loginRequired ) {
                 return super.dispatchKeyEvent(event);
             }
