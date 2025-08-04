@@ -61,6 +61,7 @@ V3.0.0 "IsaacSchemm/SpectrumTV_webview"<br>
 - Website controls are now shown, primarily intended to be navigated with a USB mouse
     - Full screen button and volume controls are still hidden
     - Some other features are not available until the mouse is moved or Tab is pressed on the keyboard
+- Full guide removed
 - Back button now goes to previous channel
 - Menu button now shows mini guide
 - Play/pause, rewind, and fast-forward mapped to K, J, and L respectively

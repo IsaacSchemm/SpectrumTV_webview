@@ -14,14 +14,6 @@
         android:layout_height="match_parent"
         android:focusable="true" />
 
-
-    <WebView
-        android:id="@+id/spectv_guide"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:focusable="true" />
-    <!--        android:layout_constraintHeight_percent="0.5"/>-->
-
     <TextView android:id="@+id/chNumTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

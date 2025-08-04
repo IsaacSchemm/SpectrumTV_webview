@@ -40,7 +40,6 @@ public class MainActivity extends FragmentActivity  {
     Boolean specPlayerReady = false;
     String specPlayerQueue = "";
     WebView spectrumPlayer;
-    WebView spectrumGuide;
     TextView chNumTextView;
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedPrefEdit;
@@ -89,10 +88,7 @@ public class MainActivity extends FragmentActivity  {
                      if ($('video')?.length > 0) {
                         // Max volume
                         $('video')[0].volume = 1.0;
-                        // Load Guide
-                        Spectv.MyDebug('start preloading guide running playerInitJS');
-                        Spectv.preloadGuide();
-                        Spectv.MyDebug('done preloading guide running playerInitJS ');
+
                         clearInterval(loopVar);
                         
                         // gigem - Wat for for and click the Still there? Continue button.
@@ -129,9 +125,6 @@ public class MainActivity extends FragmentActivity  {
                } else {
                   Spectv.setSpecPlayerReady();
                };
-              
-               function toggleGuide(s) { Spectv.channelGuide(s) };
-               function toggleMiniGuide(s) { Spectv.channelGuide(s) };
               
                // check if video is ready, when ready create the guide database
                // if required
@@ -217,8 +210,6 @@ public class MainActivity extends FragmentActivity  {
                 "\n Found " +  guideManager.numberOfChannels() + " channels");
 
         chNumTextView = findViewById(R.id.chNumTextView);
-        initGuide();
-        spectrumGuide.addJavascriptInterface(this, "Spectv");
         initPlayer();
         spectrumPlayer.addJavascriptInterface(this, "Spectv");
 
@@ -358,59 +349,12 @@ public class MainActivity extends FragmentActivity  {
                 return true;
             }
 
-            if (false && spectrumGuide.getVisibility() == View.GONE && !miniGuideIsShowing) {
-                // Simulate clicking on the video player which brings up the mini channel guide (just like on desktop)
-                //spectrumPlayer.evaluateJavascript("$('#spectrum-player').focus().click();", null);
-
-//                spectrumGuide.evaluateJavascript("window.location.href;", new ValueCallback<String>() {
-//                    @Override
-//                    public void onReceiveValue(String currentURL) {
-//                        currentURL = currentURL.replaceAll("^\"|\"$", "");
-//                        if (!currentURL.equals(guideUrl)) {
-//                            spectrumGuide.evaluateJavascript("history.go(-(history.length -1))", null);
-//                        }
-//                        spectrumPlayer.evaluateJavascript("toggleGuide('SHOW');", null);
-//                    }
-//                });
-
-                if (!guideManager.guideCacheIsReady()) {
-                    MyDebug("Error  dispatchKeyEvent - Guide NOT AVAILABLE");
-                    Toast.makeText(getBaseContext(), "Guide is not available",
-                            Toast.LENGTH_LONG).show();
-                    return true;
-                }
-
-                spectrumPlayer.evaluateJavascript("toggleGuide('SHOWGUIDE');", null);
-//              scroll Guide to current channel playing
-                String curchannel = sharedPref.getString("currentChannel",DEFAULTCHANNEL);
-                scrollToGuideChannel(curchannel);
-                return true;
-            }
-
-            if (false && spectrumGuide.getVisibility() == View.GONE && !miniGuideIsShowing) {
-                // toggle closed caption
-                spectrumPlayer.evaluateJavascript("$('.closed-caption').click();", null);
-                return true;
-            }
-
-
-            if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && spectrumGuide.getVisibility() != View.GONE) {
-                if (spectrumGuide.canGoBack()) {
-                    MyDebug("keycode back, guide is visable - can go back");
-                    spectrumGuide.evaluateJavascript("history.back();", null);
-                } else {
-                    MyDebug("keycode back, guide is visable - can NOT go back");
-                    spectrumPlayer.evaluateJavascript("toggleGuide('HIDEGUIDE');", null);
-                }
-                return true;
-            }
-
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && miniGuideIsShowing) {
                 toggleMiniGuideWindow("CLOSE");
                 return true;
             }
 
-            if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && spectrumGuide.getVisibility() == View.GONE) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
                 // ignore keyevent until app is ready, ie. miniguide data is loaded
                 if (!guideManager.guideCacheIsReady()) {
                     MyDebug("Error  dispatchKeyEvent - MiniGuide NOT AVAILABLE");
@@ -494,9 +438,7 @@ public class MainActivity extends FragmentActivity  {
     }
 
     private void handleChNumEvent(String chnum) {
-        if (spectrumGuide.getVisibility() == View.VISIBLE) {
-            scrollToGuideChannel(chnum);
-        } else if (spectrumPlayer.getVisibility() == View.VISIBLE) {
+        if (spectrumPlayer.getVisibility() == View.VISIBLE) {
             MyDebug("chnumber = " + chnum + " ENTER KEY");
             if (miniGuideIsShowing) {
                 scrollToMiniGuideChannel(chnum, "");
@@ -633,7 +575,6 @@ public class MainActivity extends FragmentActivity  {
                                 """;
 
         MyDebug("scrollToGuideChannel chnum = " + chnum );
-        spectrumGuide.evaluateJavascript(scrollToGuideChannelJS2, null);
     }
 
     @JavascriptInterface
@@ -701,39 +642,6 @@ public class MainActivity extends FragmentActivity  {
 
 
     @JavascriptInterface
-    public void channelGuide(String action) {
-        switch (action) {
-            case "SHOWGUIDE":
-                try {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            spectrumGuide.setVisibility(View.VISIBLE);
-                            spectrumGuide.requestFocus();
-                        }
-                    });
-
-                } catch (Exception e) {
-                    Log.d("ERROR in showing", e.toString());
-                }
-                break;
-            case "HIDEGUIDE":
-                try {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            spectrumGuide.setVisibility(View.GONE);
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.d("ERROR in hiding", e.toString());
-                }
-                break;
-        }
-    }
-
-
-    @JavascriptInterface
     public void miniGuidePlayChannel(String chnum, String tsmid ) {
         // build javascript to select channel
         try {
@@ -779,7 +687,6 @@ public class MainActivity extends FragmentActivity  {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    spectrumGuide.setVisibility(View.GONE);
                     miniGuidePlayChannel(chNum,channelId);
                 }
             });
@@ -797,10 +704,6 @@ public class MainActivity extends FragmentActivity  {
                 public void run() {
                     saveLastChannel(channelId,chNum);
                     spectrumPlayer.loadUrl(baseLiveChannelURL + channelId);
-                    spectrumGuide.setVisibility(View.GONE);
-                    if (goback) {
-                        spectrumGuide.evaluateJavascript("history.back();", null);
-                    }
                 }
             });
         } catch (Exception e) {
@@ -821,24 +724,6 @@ public class MainActivity extends FragmentActivity  {
                         sharedPrefEdit.putString("prevChannel", lastCurrentChannel);
                     }
                     sharedPrefEdit.apply();
-                }
-            });
-        } catch (Exception e) {
-            Log.d("ERROR in live channel nav", e.toString());
-        }
-    }
-
-
-
-    @JavascriptInterface
-    public void preloadGuide() {
-        try {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (!guideLoaded) {
-                        spectrumGuide.loadUrl(guideUrl);
-                    }
                 }
             });
         } catch (Exception e) {
@@ -904,55 +789,6 @@ public class MainActivity extends FragmentActivity  {
         spectrumPlayer.setVerticalScrollBarEnabled(false);
         MyDebug("about to loadUrl " + lastChannelURL );
         spectrumPlayer.loadUrl(lastChannelURL.isEmpty() ? newSessionURL : lastChannelURL);
-    }
-
-    private void initGuide() {
-        spectrumGuide = (WebView) findViewById(R.id.spectv_guide);
-        spectrumGuide.setVisibility(View.GONE);
-
-        spectrumGuide.setBackgroundColor(Color.TRANSPARENT);
-        spectrumGuide.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-
-        spectrumGuide.setWebChromeClient(new WebChromeClient() {
-//            @Override
-//            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-//                Log.d("**************GUIDE************", consoleMessage.message() + " -- From line " +
-//                        consoleMessage.lineNumber() + " of " + consoleMessage.sourceId());
-//                return true;
-//            }
-
-            @Override
-            public void onPermissionRequest(PermissionRequest request) {
-                String[] resources = request.getResources();
-                for (int i = 0; i < +resources.length; i++) {
-                    if (PermissionRequest.RESOURCE_PROTECTED_MEDIA_ID.equals(resources[i])) {
-                        request.grant(resources);
-                        return;
-                    }
-                }
-
-                super.onPermissionRequest(request);
-            }
-
-
-        });
-        WebSettings spectrumGuideWebSettings = spectrumGuide.getSettings();
-        initWebviews(spectrumGuideWebSettings);
-
-        spectrumGuide.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                if (!guideLoaded) {
-                    guideLoaded = true;
-                    CookieManager.getInstance().setCookie(guideUrl, cookies, null);
-                }
-                super.onPageFinished(view, url);
-                spectrumGuide.evaluateJavascript(
-                        guideInitJS
-                        , null);
-            }
-        });
-
     }
 
     /////////////////////////////////////////////////////////
