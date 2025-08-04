@@ -1,4 +1,4 @@
-# SpectrumTV_webview V2.0.4
+# SpectrumTV_webview V3.0.0
 Spectrum TV App for Android TV platform.
 Just a simple webview that launches the watch.spectrum.net website to be able to watch live tv.
 Manipulates javascript to hide unnecessary html elements, etc...
@@ -17,8 +17,8 @@ V1.2.1   "gigem/SpectrumTV_webview"<br>
 - Minimum SDK level set to 25 to support FireStick
 
 Example<br>
-adb shell am start -n com.workaround.spectv/com.workaround.spectv.MainActivity -e  channelNum 55,<br>
-adb shell am start -n com.workaround.spectv/com.workaround.spectv.MainActivity
+adb shell am start -n com.workaround.spectv.sp/com.workaround.spectv.sp.MainActivity -e  channelNum 55,<br>
+adb shell am start -n com.workaround.spectv.sp/com.workaround.spectv.sp.MainActivity
 -d  https://watch.spectrum.net/livetv?channelNum=124
 
 V2.0
@@ -56,6 +56,14 @@ V2.0.3
 V2.0.4
 - Add support for "Left Arrow (DPAD_LEFT)" to toggle previous/last channel
 
+V3.0.0 "IsaacSchemm/SpectrumTV_webview"<br>
+- New app namespace
+- Website controls are now shown, primarily intended to be navigated with a USB mouse
+    - Full screen button, volume controls, and seek bar are still hidden due to issues with remote control navigation
+- Back button now goes to previous channel
+- Menu button now shows guide
+- Play/pause, rewind, and fast-forward mapped to K, J, and L respectively
+
 ### Installation
 - On first startup, after the initial channel is loaded a scan of the miniguide will be started. <br>
   A message will be displayed "Scanning MiniGuide" which will close when the scan has completed, around 45 seconds.<br>
@@ -66,8 +74,7 @@ V2.0.4
 2. From the Application settings on the device, Force stop "Spectv", Delete the application data, restart "Spectv"
 
 ### Assets
-<a href="https://github.com/brodfueh/SpectrumTV_webview/releases/download/Spectv-V2.0.4/spectv-2.0.4.apk">
-Download Spectv v2.0.4  apk</a>
+Binaries (.apk) are not uploaded for this fork. Please see the upstream repository instead.
 
 
 
