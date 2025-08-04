@@ -1,4 +1,4 @@
-package com.workaround.spectv.sp;
+package com.workaround.spectv.mouse;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -186,7 +186,7 @@ public class MainActivity extends FragmentActivity  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPref = this.getSharedPreferences("com.workaround.spectv.sp.pref", Context.MODE_PRIVATE);
+        sharedPref = this.getSharedPreferences("com.workaround.spectv.mouse.pref", Context.MODE_PRIVATE);
         sharedPrefEdit = sharedPref.edit();
         MyDebug("start onCreate ");
         specPlayerReady = false;

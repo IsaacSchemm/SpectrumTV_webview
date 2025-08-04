@@ -1,4 +1,4 @@
-package com.workaround.spectv.sp;
+package com.workaround.spectv.mouse;
 
 import java.io.Serializable;
 

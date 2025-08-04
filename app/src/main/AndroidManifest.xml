@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.spectv">
         <activity
-            android:name="com.workaround.spectv.sp.MainActivity"
+            android:name="com.workaround.spectv.mouse.MainActivity"
             android:banner="@drawable/spectv_banner"
             android:exported="true"
             android:icon="@drawable/app_icon_your_company"

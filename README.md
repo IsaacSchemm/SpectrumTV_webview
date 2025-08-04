@@ -17,8 +17,8 @@ V1.2.1   "gigem/SpectrumTV_webview"<br>
 - Minimum SDK level set to 25 to support FireStick
 
 Example<br>
-adb shell am start -n com.workaround.spectv.sp/com.workaround.spectv.sp.MainActivity -e  channelNum 55,<br>
-adb shell am start -n com.workaround.spectv.sp/com.workaround.spectv.sp.MainActivity
+adb shell am start -n com.workaround.spectv.mouse/com.workaround.spectv.mouse.MainActivity -e  channelNum 55,<br>
+adb shell am start -n com.workaround.spectv.mouse/com.workaround.spectv.mouse.MainActivity
 -d  https://watch.spectrum.net/livetv?channelNum=124
 
 V2.0
@@ -59,9 +59,10 @@ V2.0.4
 V3.0.0 "IsaacSchemm/SpectrumTV_webview"<br>
 - New app namespace
 - Website controls are now shown, primarily intended to be navigated with a USB mouse
-    - Full screen button, volume controls, and seek bar are still hidden due to issues with remote control navigation
+    - Full screen button and volume controls are still hidden
+    - Some other features are not available until the mouse is moved or Tab is pressed on the keyboard
 - Back button now goes to previous channel
-- Menu button now shows guide
+- Menu button now shows mini guide
 - Play/pause, rewind, and fast-forward mapped to K, J, and L respectively
 
 ### Installation
