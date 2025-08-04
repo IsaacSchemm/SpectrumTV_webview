@@ -215,9 +215,6 @@ public class MainActivity extends FragmentActivity  {
         }
         MyDebug("Starting Spectv channel " + curchnum +
                 "\n Found " +  guideManager.numberOfChannels() + " channels");
-        Toast.makeText(getBaseContext(), "Starting Spectv channel " + curchnum +
-                        "\n Found " +  guideManager.numberOfChannels() + " channels",
-                Toast.LENGTH_LONG).show();
 
         chNumTextView = findViewById(R.id.chNumTextView);
         initGuide();
@@ -257,7 +254,7 @@ public class MainActivity extends FragmentActivity  {
     @Override
     public void onRestart() {
         super.onRestart();
-        Toast.makeText(getBaseContext(), "Restarting Spectv  ",
+        Toast.makeText(getBaseContext(), "Restarting",
                 Toast.LENGTH_LONG).show();
         MyDebug("onRestart intents = " + getIntent() );
     }
@@ -378,7 +375,7 @@ public class MainActivity extends FragmentActivity  {
 
                 if (!guideManager.guideCacheIsReady()) {
                     MyDebug("Error  dispatchKeyEvent - Guide NOT AVAILABLE");
-                    Toast.makeText(getBaseContext(), "Guide NOT AVAILABLE",
+                    Toast.makeText(getBaseContext(), "Guide is not available",
                             Toast.LENGTH_LONG).show();
                     return true;
                 }
@@ -417,7 +414,7 @@ public class MainActivity extends FragmentActivity  {
                 // ignore keyevent until app is ready, ie. miniguide data is loaded
                 if (!guideManager.guideCacheIsReady()) {
                     MyDebug("Error  dispatchKeyEvent - MiniGuide NOT AVAILABLE");
-                    Toast.makeText(getBaseContext(), "MiniGuide NOT AVAILABLE",
+                    Toast.makeText(getBaseContext(), "Mini-guide is not available",
                             Toast.LENGTH_LONG).show();
                     return false;
                 }
@@ -513,7 +510,7 @@ public class MainActivity extends FragmentActivity  {
                         specPlayerQueue = chnum;
                     }
                 } else {
-                    Toast.makeText(getBaseContext(), "Channel " + chnum + " not found",
+                    Toast.makeText(getBaseContext(), "Channel " + chnum + " not found. If it was newly added, try clearing this app's data in your system settings.",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -776,7 +773,7 @@ public class MainActivity extends FragmentActivity  {
 
     @JavascriptInterface
     public void guidePlayChannel(String chNum, String channelId) {
-        Toast.makeText(getBaseContext(), "Starting Channel  = " + chNum + "/" + channelId,
+        Toast.makeText(getBaseContext(), "Loading channel " + chNum + " (" + channelId + ")",
                 Toast.LENGTH_SHORT).show();
         try {
             runOnUiThread(new Runnable() {
@@ -792,7 +789,7 @@ public class MainActivity extends FragmentActivity  {
     }
     @JavascriptInterface
     public void navToChannel(String channelId, String chNum, boolean goback) {
-        Toast.makeText(getBaseContext(), "Starting Channel  = " + chNum + "/" + channelId,
+        Toast.makeText(getBaseContext(), "Loading channel " + chNum + " (" + channelId + ")",
                 Toast.LENGTH_SHORT).show();
         try {
             runOnUiThread(new Runnable() {
