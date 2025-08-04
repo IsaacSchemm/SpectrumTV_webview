@@ -70,7 +70,7 @@ public class MainActivity extends FragmentActivity  {
                      document.querySelector('.btn-success')?.click();
                      // Hide certain elements
                      $('<style>volume-control, toggle-fullscreen { display:none !important; }</style>').appendTo(document.body);
-                     $('<style id=mouseNotMovedStyles>nav.top-level-nav, main-menu li:not(:has(#livetv-link), :has(#watchAnytime-link)), global-search, ovp-scrubber .slider { display:none; }</style>').appendTo(document.body);
+                     $('<style id=mouseNotMovedStyles>nav.top-level-nav, main-menu li:not(:has(#livetv-link), :has(#watchAnytime-link)), global-search, ovp-scrubber .slider { display:none !important; }</style>').appendTo(document.body);
                      document.body.addEventListener('mousemove', () => {
                         $('#mouseNotMovedStyles').remove();
                      }, { once: true });
